@@ -1,8 +1,8 @@
-from django.test import TestCase
+from django.test import TestCase, Client
 from django.urls import reverse
 from django.utils import timezone
 
-from main.models import Experience
+from main.models import Experience, Project
 
 
 class MainTest(TestCase):
@@ -56,3 +56,29 @@ class MainTest(TestCase):
         self.assertFalse(self.experience.is_ongoing)
         self.assertContains(response, "Selesai")
         self.assertNotContains(response, "Sedang berlangsung")
+
+class ProjectViewTest(TestCase):
+    def setUp(self):
+        self.client = Client()
+        self.url = reverse('main:show_projects')
+
+    # 1. URL dapat diakses dan menggunakan template yang tepat
+    def test_projects_url_and_template(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'projects.html')
+
+    # 2. Halaman HTML menampilkan pesan kondisi kosong ketika belum ada data
+    def test_projects_empty_state(self):
+        response = self.client.get(self.url)
+        self.assertContains(response, "Belum ada proyek yang ditambahkan saat ini.")
+
+    # 3. Data model muncul di halaman HTML ketika ada data
+    def test_projects_with_data(self):
+        Project.objects.create(
+            title="Proyek Dummy", 
+            description="Deskripsi", 
+            tech_stack="Python"
+        )
+        response = self.client.get(self.url)
+        self.assertContains(response, "Proyek Dummy")

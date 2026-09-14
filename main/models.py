@@ -24,3 +24,8 @@ class Experience(models.Model):
     @property
     def is_ongoing(self):
         return self.ended_at is None
+
+class Project(models.Model):
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    tech_stack = models.CharField(max_length=100)

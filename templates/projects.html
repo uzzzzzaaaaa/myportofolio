@@ -1,0 +1,70 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Projects - Hudzaifah Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Mengambil CSS menggunakan DTL static -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container">
+        <!-- Tautan kembali ke halaman utama -->
+        <a href="/" class="brand">Hudzaifah</a>
+        <nav>
+          <!-- Tautan navbar menggunakan DTL url -->
+          <a href="{% url 'main:show_main' %}">Profile</a>
+          <a href="{% url 'main:show_experience' %}">Experience</a>
+          <a href="{% url 'main:show_projects' %}">Projects</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="portfolio-section container" style="min-height: 60vh">
+        <h2>Daftar Proyek</h2>
+
+        <div class="card-container">
+          <!-- Memulai perulangan untuk mengambil data dari database -->
+          {% for project in projects %}
+          <div class="card">
+            <h3>{{ project.title }}</h3>
+            <p
+              style="
+                color: var(--accent);
+                font-weight: bold;
+                margin-bottom: 10px;
+              "
+            >
+              {{ project.tech_stack }}
+            </p>
+            <p>{{ project.description }}</p>
+          </div>
+
+          <!-- Kondisi jika database masih kosong -->
+          {% empty %}
+          <div style="text-align: center; width: 100%">
+            <p>Belum ada proyek yang ditambahkan saat ini.</p>
+          </div>
+          {% endfor %}
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <p>
+          &copy; 2026 Hudzaifah. Fakultas Ilmu Komputer, Universitas Indonesia.
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>
