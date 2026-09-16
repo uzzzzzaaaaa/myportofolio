@@ -1,70 +1,67 @@
-{% load static %}
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Projects - Hudzaifah Portfolio</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap"
-      rel="stylesheet"
-    />
-    <!-- Mengambil CSS menggunakan DTL static -->
-    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
-  </head>
-  <body>
-    <header class="site-header">
-      <div class="container">
-        <!-- Tautan kembali ke halaman utama -->
-        <a href="/" class="brand">Hudzaifah</a>
-        <nav>
-          <!-- Tautan navbar menggunakan DTL url -->
-          <a href="{% url 'main:show_main' %}">Profile</a>
-          <a href="{% url 'main:show_experience' %}">Experience</a>
-          <a href="{% url 'main:show_projects' %}">Projects</a>
-        </nav>
+{% extends "base.html" %} {% block meta %}
+<title>Projects - {{ name }}</title>
+{% endblock meta %} {% block content %}
+<main>
+  <section class="experience-section" id="experience">
+    <div class="container">
+      <p class="section-kicker">Karya yang saya bangun</p>
+      <div class="project-header">
+        <h1>Projects</h1>
+        <a
+          href="{% url 'main:create_project' %}"
+          class="button project-add-button"
+        >
+          <span aria-hidden="true">+</span>
+          Tambah Proyek
+        </a>
       </div>
-    </header>
+      <form
+        method="get"
+        action="{% url 'main:show_projects' %}"
+        class="project-search"
+      >
+        <input
+          type="search"
+          name="title"
+          value="{{ title_query }}"
+          placeholder="Cari berdasarkan nama proyek"
+          class="project-search__input"
+          aria-label="Cari berdasarkan nama proyek"
+        />
+        <button type="submit" class="button">Cari</button>
+      </form>
+      <div class="experience-grid project-grid">
+        {% for project in project_list %}
+        <article class="experience-card">
+          {% if project.project_image_url %}
+          <img
+            src="{{ project.project_image_url }}"
+            alt="Gambar {{ project.title }}"
+            class="project-image"
+          />
+          {% endif %}
+          <h2>{{ project.title }}</h2>
+          <span class="experience-category">{{ project.tech_stack }}</span>
+          <p class="experience-description">{{ project.description }}</p>
+          <div class="project-card-actions">
+            <div class="project-actions">
+              {% if project.project_url %}
+              <a href="{{ project.project_url }}" class="button"
+                >Lihat Project</a
+              >
 
-    <main>
-      <section class="portfolio-section container" style="min-height: 60vh">
-        <h2>Daftar Proyek</h2>
-
-        <div class="card-container">
-          <!-- Memulai perulangan untuk mengambil data dari database -->
-          {% for project in projects %}
-          <div class="card">
-            <h3>{{ project.title }}</h3>
-            <p
-              style="
-                color: var(--accent);
-                font-weight: bold;
-                margin-bottom: 10px;
-              "
-            >
-              {{ project.tech_stack }}
-            </p>
-            <p>{{ project.description }}</p>
+              {% endif %} {% include "components/project_delete_modal.html" with
+              project=project %}
+            </div>
           </div>
-
-          <!-- Kondisi jika database masih kosong -->
-          {% empty %}
-          <div style="text-align: center; width: 100%">
-            <p>Belum ada proyek yang ditambahkan saat ini.</p>
-          </div>
-          {% endfor %}
-        </div>
-      </section>
-    </main>
-
-    <footer class="site-footer">
-      <div class="container">
-        <p>
-          &copy; 2026 Hudzaifah. Fakultas Ilmu Komputer, Universitas Indonesia.
-        </p>
+        </article>
+        {% empty %} {% if title_query %}
+        <p class="empty-state">Tidak ada proyek dengan nama tersebut.</p>
+        {% else %}
+        <p class="empty-state">Belum ada proyek yang ditambahkan.</p>
+        {% endif %} {% endfor %}
       </div>
-    </footer>
-  </body>
-</html>
+    </div>
+  </section>
+</main>
+{% endblock content %}
