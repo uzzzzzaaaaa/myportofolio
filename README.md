@@ -34,3 +34,18 @@ Berikut log percakapan saya dengan Gemini: https://share.gemini.google/yUmzUMmlt
    Saya menggunakan AI Gemini 3.1 Pro untuk menuntun saya mengerjakan Tugas 2. Seharusnya saya bisa untuk tidak menggunakan AI, tetapi saya sedikit lupa cara untuk menambah model dan semacamnya. Jika ada kendala dalam mengerjakan Tugas 2 ini, saya juga meminta AI untuk menemukan letak masalahnya.
 
    Berikut log percakapan saya dengan Gemini: https://share.gemini.google/p0oI41HHQVtN
+
+   ### Tugas 3
+
+4. ModelForm mengotomatisasi pembuatan elemen HTML dan validasi secara langsung berdasarkan struktur database kita, sehingga kodenya jauh lebih praktis dan tidak berulang. {% csrf_token %} wajib ada untuk alasan keamanan cyber
+
+5. JSON jauh lebih ringan, ringkas, dan mudah dibaca dibandingkan XML yang bertele tele dengan banyak tag pembuka dan penutup. Selain itu, JSON sangat ideal untuk web modern karena bisa langsung diproses oleh JavaScript di frontend tanpa perlu parsing yang rumit.
+
+6. View mengambil data dari database (berupa objek python) > data masuk serializer untuk diubah menjadi JSON > dikirim kembali ke klien melalui HttpResponse
+
+Serialization wajib dilakukan karena klien atau browser tidak mengerti objek kelas Python. Proses ini "menerjemahkan" objek Python menjadi format teks standar (JSON) agar datanya bisa dikirim dan dipahami lewat jaringan web.
+
+Dokumentasi:
+Saya menggunakan AI Gemini 3.1 Pro untuk membantu saya dalam mengerjakan tugas 3 ini dan juga menyelesaikan error error yang saya temukan saat mengerjakan tugas ini.
+
+Berikut log percakapan saya dengan Gemini: https://share.gemini.google/Tg2ibaIkr8jq

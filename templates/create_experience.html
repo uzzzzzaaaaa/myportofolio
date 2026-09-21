@@ -1,0 +1,73 @@
+{% extends 'base.html' %} {% block content %}
+<main
+  class="container"
+  style="padding: 100px 20px; max-width: 800px; margin: auto"
+>
+  <h2 style="font-size: 2rem; margin-bottom: 30px">Add New Experience</h2>
+
+  <form method="POST">
+    {% csrf_token %}
+
+    <div style="display: flex; flex-direction: column; gap: 20px">
+      {% for field in form %}
+      <div class="form-group">
+        <label
+          for="{{ field.id_for_label }}"
+          style="font-weight: 700; display: block; margin-bottom: 8px"
+        >
+          {{ field.label }}
+        </label>
+
+        <!-- Menyuntikkan style inline untuk menyamakan tampilan input -->
+        {{ field }}
+        <style>
+          #{{ field.id_for_label }} {
+              width: 100%;
+              padding: 10px;
+              border: 1px solid #d95d39;
+              border-radius: 4px;
+              font-family: inherit;
+              font-size: 1rem;
+          }
+        </style>
+
+        <!-- Menampilkan pesan error jika validasi gagal -->
+        {% if field.errors %}
+        <div style="color: red; font-size: 0.85rem; margin-top: 5px">
+          {{ field.errors }}
+        </div>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+
+    <div style="margin-top: 30px; display: flex; gap: 10px">
+      <button
+        type="submit"
+        style="
+          padding: 12px 24px;
+          background-color: var(--accent, #d95d39);
+          color: white;
+          border: none;
+          font-weight: bold;
+          cursor: pointer;
+        "
+      >
+        Tambah Experience
+      </button>
+      <a
+        href="/"
+        style="
+          padding: 12px 24px;
+          background-color: var(--ink, #000);
+          color: white;
+          text-decoration: none;
+          font-weight: bold;
+        "
+      >
+        Batal
+      </a>
+    </div>
+  </form>
+</main>
+{% endblock content %}

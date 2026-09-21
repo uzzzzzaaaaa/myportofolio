@@ -1,6 +1,6 @@
-from django.forms import ModelForm, TextInput, Textarea, URLInput
+from django.forms import ModelForm, TextInput, Textarea, URLInput, Select, DateInput
 
-from main.models import Project
+from main.models import Project, Experience
 
 class ProjectForm(ModelForm):
     class Meta:
@@ -49,4 +49,26 @@ class ProjectForm(ModelForm):
                     "placeholder": "https://drive.google.com/thumbnail?id=...&sz=w1000",
                 }
             ),
+        }
+
+class ExperienceForm(ModelForm):
+    class Meta:
+        model = Experience
+        # Masukkan field yang bisa diisi pengguna (jangan masukkan id dan started_at)
+        fields = ["title", "category", "description", "thumbnail", "ended_at"]
+        
+        # (Opsional) Biar form-nya rapi dan keren seperti ProjectForm kamu
+        labels = {
+            "title": "Judul Pengalaman",
+            "category": "Kategori",
+            "description": "Deskripsi",
+            "thumbnail": "URL Thumbnail",
+            "ended_at": "Tanggal Selesai",
+        }
+        widgets = {
+            "title": TextInput(attrs={"placeholder": "Misal: UI/UX Designer Intern"}),
+            "description": Textarea(attrs={"placeholder": "Ceritakan pengalamanmu...", "rows": 3}),
+            "thumbnail": URLInput(attrs={"placeholder": "https://link-ke-gambar.com"}),
+            "ended_at": DateInput(attrs={"type": "date"}), # Ini bikin muncul kalender
+            "category": Select(), 
         }

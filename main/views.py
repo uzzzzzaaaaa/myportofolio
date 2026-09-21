@@ -1,8 +1,4 @@
-from django.shortcuts import render
-
-from main.models import Experience
-
-from main.models import Project
+from main.models import Experience, Project
 
 from django.contrib import messages
 
@@ -12,7 +8,7 @@ from django.http import HttpResponse
 
 from django.shortcuts import get_object_or_404, redirect, render
 
-from main.forms import ProjectForm
+from main.forms import ProjectForm, ExperienceForm
 
 
 
@@ -85,3 +81,33 @@ def delete_project(request, project_id):
         return redirect("main:show_projects")
 
     return redirect("main:show_projects")
+
+def create_experience(request):
+    form = ExperienceForm(request.POST or None)
+    
+    if form.is_valid() and request.method == "POST":
+        form.save()
+        return redirect('main:show_experience') 
+
+    context = {'form': form}
+    return render(request, "create_experience.html", context)
+
+def edit_experience(request, id):
+    experience = get_object_or_404(Experience, pk=id)
+    form = ExperienceForm(request.POST or None, instance=experience)
+    
+    if form.is_valid() and request.method == "POST":
+        form.save()
+        return redirect('main:show_experience')
+
+    context = {'form': form, 'experience': experience}
+    return render(request, "edit_experience.html", context)
+
+def delete_experience(request, id):
+    experience = get_object_or_404(Experience, pk=id)
+    experience.delete()
+    return redirect('main:show_experience')
+
+def show_json_experience(request):
+    data = Experience.objects.all()
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
