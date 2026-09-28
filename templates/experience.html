@@ -4,6 +4,9 @@
     <div class="container">
       <p class="section-kicker">Perjalanan saya sejauh ini</p>
       <h1>Experience</h1>
+
+      <!-- HANYA SUPERUSER YANG BISA TAMBAH DATA -->
+      {% if user.is_superuser %}
       <a
         href="{% url 'main:create_experience' %}"
         style="
@@ -18,10 +21,12 @@
       >
         + Tambah Pengalaman Baru
       </a>
+      {% endif %}
 
       <div class="experience-grid">
         {% for experience in experience_list %}
-        <ar class="experience-card">
+        <!-- Typo <ar> sudah diperbaiki menjadi <article> -->
+        <article class="experience-card">
           <span class="experience-category">
             {{ experience.get_category_display }}
           </span>
@@ -34,11 +39,82 @@
           <p class="experience-status">Selesai</p>
           {% endif %}
 
-          <div style="margin-top: 15px; display: flex; gap: 10px;">
-              <a href="{% url 'main:edit_experience' experience.id %}" style="padding: 5px 10px; background-color: #ff9800; color: white; text-decoration: none; border-radius: 4px; font-size: 0.85rem;">Edit</a>
+          <!-- BAGIAN TOMBOL AKSI & STAR -->
+          <div
+            style="
+              margin-top: 15px;
+              display: flex;
+              flex-direction: column;
+              gap: 10px;
+            "
+          >
+            <!-- 1. INFO JUMLAH STAR & TOMBOL STAR (Hanya untuk user yang login) -->
+            <div style="display: flex; align-items: center; gap: 10px">
+              <span style="font-weight: bold"
+                >⭐ {{ experience.stars.count }} Stars</span
+              >
 
-              <a href="{% url 'main:delete_experience' experience.id %}" onclick="return confirm('Yakin mau menghapus data ini?');" style="padding: 5px 10px; background-color: #dc3545; color: white; text-decoration: none; border-radius: 4px; font-size: 0.85rem;">Delete</a>
-          </div>  
+              {% if user.is_authenticated %}
+              <form
+                action="{% url 'main:toggle_star_experience' experience.id %}"
+                method="POST"
+                style="display: inline"
+              >
+                {% csrf_token %}
+                <button
+                  type="submit"
+                  style="
+                    padding: 5px 10px;
+                    background-color: var(--ink, #000);
+                    color: white;
+                    border: none;
+                    border-radius: 4px;
+                    cursor: pointer;
+                  "
+                >
+                  {% if user in experience.stars.all %} Batalkan Star {% else %}
+                  Beri Star {% endif %}
+                </button>
+              </form>
+              {% endif %}
+            </div>
+
+            <!-- 2. TOMBOL EDIT & DELETE -->
+            <!-- prettier-ignore -->
+            {% if user.is_superuser or is_editor %}
+            <div style="display: flex; gap: 10px; margin-top: 5px">
+              <a
+                href="{% url 'main:edit_experience' experience.id %}"
+                style="
+                  padding: 5px 10px;
+                  background-color: #ff9800;
+                  color: white;
+                  text-decoration: none;
+                  border-radius: 4px;
+                  font-size: 0.85rem;
+                "
+                >Edit</a
+              >
+
+              <!-- HANYA SUPERUSER YANG BISA DELETE -->
+              {% if user.is_superuser %}
+              <a
+                href="{% url 'main:delete_experience' experience.id %}"
+                onclick="return confirm('Yakin mau menghapus data ini?');"
+                style="
+                  padding: 5px 10px;
+                  background-color: #dc3545;
+                  color: white;
+                  text-decoration: none;
+                  border-radius: 4px;
+                  font-size: 0.85rem;
+                "
+                >Delete</a
+              >
+              {% endif %}
+            </div>
+            {% endif %}
+          </div>
         </article>
         {% empty %}
         <p class="empty-state">Belum ada pengalaman yang ditambahkan.</p>

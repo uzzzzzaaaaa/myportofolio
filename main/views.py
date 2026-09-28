@@ -4,7 +4,7 @@ from django.contrib import messages
 
 from django.core import serializers
 
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden
 
 from django.shortcuts import get_object_or_404, redirect, render
 
@@ -24,6 +24,9 @@ import datetime
 
 def show_main(request):
     last_login = request.COOKIES.get('last_login', 'Belum ada sesi login / Cookie tidak ditemukan')
+    is_editor = False
+    if request.user.is_authenticated:
+        is_editor = request.user.groups.filter(name='Editor').exists()
     context = {
         "name": "Hudzaifah",
         "npm": "2506622840",
@@ -32,6 +35,8 @@ def show_main(request):
             "Mahasiswa Ilmu Komputer di Universitas Indonesia yang hobi mengotomatiskan segala sesuatu yang bersifat repetitif."
         ),
         "last_login": last_login,
+        'is_editor': is_editor,
+        
     }
     return render(request, "index.html", context)
 
@@ -100,7 +105,10 @@ def delete_project(request, project_id):
 
     return redirect("main:show_projects")
 
+@login_required(login_url='/login/')
 def create_experience(request):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("403 Forbidden: Hanya Pemilik Portofolio yang dapat membuat data.")
     form = ExperienceForm(request.POST or None)
     
     if form.is_valid() and request.method == "POST":
@@ -110,7 +118,12 @@ def create_experience(request):
     context = {'form': form}
     return render(request, "create_experience.html", context)
 
+@login_required(login_url='/login/')
 def edit_experience(request, id):
+    is_editor = request.user.groups.filter(name='Editor').exists()
+    
+    if not (request.user.is_superuser or is_editor):
+        return HttpResponseForbidden("403 Forbidden: Anda tidak memiliki hak untuk mengubah data.")
     experience = get_object_or_404(Experience, pk=id)
     form = ExperienceForm(request.POST or None, instance=experience)
     
@@ -121,7 +134,10 @@ def edit_experience(request, id):
     context = {'form': form, 'experience': experience}
     return render(request, "edit_experience.html", context)
 
+@login_required(login_url='/login/')
 def delete_experience(request, id):
+    if not request.user.is_superuser:
+        return HttpResponseForbidden("403 Forbidden: Hanya Pemilik Portofolio yang dapat menghapus data.")
     experience = get_object_or_404(Experience, pk=id)
     experience.delete()
     return redirect('main:show_experience')
@@ -177,3 +193,15 @@ def toggle_star(request, project_id):
             project.starred_by.add(request.user)
 
     return redirect("main:show_projects")
+
+@login_required(login_url='/login/')
+def toggle_star_experience(request, id):
+    if request.method == 'POST':
+        experience = get_object_or_404(Experience, pk=id)
+        
+        if request.user in experience.stars.all():
+            experience.stars.remove(request.user)
+        else:
+            experience.stars.add(request.user)
+            
+    return redirect('main:show_experience')
