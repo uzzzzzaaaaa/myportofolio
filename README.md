@@ -35,13 +35,13 @@ Berikut log percakapan saya dengan Gemini: https://share.gemini.google/yUmzUMmlt
 
    Berikut log percakapan saya dengan Gemini: https://share.gemini.google/p0oI41HHQVtN
 
-   ### Tugas 3
+### Tugas 3
 
-4. ModelForm mengotomatisasi pembuatan elemen HTML dan validasi secara langsung berdasarkan struktur database kita, sehingga kodenya jauh lebih praktis dan tidak berulang. {% csrf_token %} wajib ada untuk alasan keamanan cyber
+1. ModelForm mengotomatisasi pembuatan elemen HTML dan validasi secara langsung berdasarkan struktur database kita, sehingga kodenya jauh lebih praktis dan tidak berulang. {% csrf_token %} wajib ada untuk alasan keamanan cyber
 
-5. JSON jauh lebih ringan, ringkas, dan mudah dibaca dibandingkan XML yang bertele tele dengan banyak tag pembuka dan penutup. Selain itu, JSON sangat ideal untuk web modern karena bisa langsung diproses oleh JavaScript di frontend tanpa perlu parsing yang rumit.
+2. JSON jauh lebih ringan, ringkas, dan mudah dibaca dibandingkan XML yang bertele tele dengan banyak tag pembuka dan penutup. Selain itu, JSON sangat ideal untuk web modern karena bisa langsung diproses oleh JavaScript di frontend tanpa perlu parsing yang rumit.
 
-6. View mengambil data dari database (berupa objek python) > data masuk serializer untuk diubah menjadi JSON > dikirim kembali ke klien melalui HttpResponse
+3. View mengambil data dari database (berupa objek python) > data masuk serializer untuk diubah menjadi JSON > dikirim kembali ke klien melalui HttpResponse
 
 Serialization wajib dilakukan karena klien atau browser tidak mengerti objek kelas Python. Proses ini "menerjemahkan" objek Python menjadi format teks standar (JSON) agar datanya bisa dikirim dan dipahami lewat jaringan web.
 
@@ -49,3 +49,23 @@ Dokumentasi:
 Saya menggunakan AI Gemini 3.1 Pro untuk membantu saya dalam mengerjakan tugas 3 ini dan juga menyelesaikan error error yang saya temukan saat mengerjakan tugas ini.
 
 Berikut log percakapan saya dengan Gemini: https://share.gemini.google/Tg2ibaIkr8jq
+
+### Tugas 4
+
+Dokumentasi:
+Saya menggunakan AI Gemini 3.1 Pro untuk menuntun saya mengerjakan Tugas 4. Seharusnya saya bisa untuk tidak menggunakan AI, tetapi saya sedikit lupa cara untuk menambah model dan semacamnya. Jika ada kendala dalam mengerjakan Tugas 4 ini, saya juga meminta AI untuk menemukan letak masalahnya.
+
+Berikut log percakapan saya dengan Gemini: https://share.gemini.google/T3anMCVjM9zY
+
+### Tugas 5
+
+1. Debouncing adalah teknik menunda eksekusi fungsi sampai pengguna berhenti memicu event selama beberapa saat misalnya setelah berhenti mengetik. debouncing ini penting di pencarian AJAX supaya request tidak dikirim di setiap ketikan, sehingga beban server berkurang.
+
+2. await berfungsi menunggu promise dari fetch selesai sbelum lanjut ke baris selanjutnya. kalo ga ada await, promise nya bakal pending dan kita belum dpat datanya. Sehingga response.json dll bakal error
+
+3. XSS adalah serangan yang menyisipkan script berbahaya ke halaman web agar dijalankan di browser korban. Data AJAX lebih rentan karena sering dirender lewat innerHTML tanpa dicek dlu.
+
+Dokumentasi:
+Saya menggunakan AI Gemini 3.1 Pro untuk membantu saya mengerjakan Tugas 5 ini. Jika ada kendala dalam mengerjakan Tugas 4 ini, saya juga meminta AI untuk menemukan letak masalahnya.
+
+Berikut log percakapan saya dengan Gemini: https://share.gemini.google/I2X1xuDEwtMg

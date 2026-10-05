@@ -44,9 +44,12 @@ def show_main(request):
 
 
 def show_experience(request):
+    title_query = request.GET.get("title", "").strip()
+
     context = {
         "name": "Hudzaifah",
-        "experience_list": Experience.objects.all(),
+        "title_query": title_query,
+        "form": ExperienceForm(),
     }
     return render(request, "experience.html", context)
 
@@ -108,6 +111,32 @@ def get_projects_json(request):
 
     return JsonResponse(data, safe=False)
 
+def register(request):
+
+    form = UserCreationForm(request.POST or None)
+
+
+
+    if request.method == "POST" and form.is_valid():
+
+        form.save()
+
+        messages.success(request, "Akun berhasil dibuat. Silakan login.")
+
+        return redirect("main:login")
+
+
+
+    context = {
+
+        "name": "Burhan",
+
+        "form": form,
+
+    }
+
+    return render(request, "register.html", context)
+
 @login_required(login_url="/login/")
 def delete_project(request, project_id):
     if not request.user.is_superuser:
@@ -158,23 +187,51 @@ def delete_experience(request, id):
     experience.delete()
     return redirect('main:show_experience')
 
-def show_json_experience(request):
-    data = Experience.objects.all()
-    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+def get_experience_json(request):
+    title_query = request.GET.get("title", "").strip()
+    # Mengambil semua experience beserta data stars
+    experiences = Experience.objects.prefetch_related('stars').all()
 
-def register(request):
-    form = UserCreationForm(request.POST or None)
+    if title_query:
+        # Menambahkan fitur pencarian berdasarkan title
+        experiences = experiences.filter(title__icontains=title_query)
 
-    if request.method == "POST" and form.is_valid():
-        form.save()
-        messages.success(request, "Akun berhasil dibuat. Silakan login.")
-        return redirect("main:login")
+    data = []
+    for exp in experiences:
+        starred_users = exp.stars.all()
+        is_starred = request.user in starred_users if request.user.is_authenticated else False
+        
+        data.append({
+            "pk": str(exp.id),
+            "fields": {
+                "title": exp.title,
+                "description": exp.description,
+                "category": exp.category,
+                "thumbnail": exp.thumbnail,
+                "star_count": starred_users.count(),
+                "is_starred": is_starred,
+            }
+        })
+    return JsonResponse(data, safe=False)
 
-    context = {
-        "name": "Burhan",
-        "form": form,
-    }
-    return render(request, "register.html", context)
+@require_POST
+def create_experience_ajax(request):
+    # Memeriksa hak akses sesuai peran (hanya superuser yang boleh menambah data)
+    if not request.user.is_superuser:
+        return JsonResponse(
+            {"message": "Hanya pemilik portofolio yang dapat menambahkan pengalaman."}, 
+            status=403
+        )
+    
+    form = ExperienceForm(request.POST)
+    if form.is_valid():
+        experience = form.save()
+        return JsonResponse(
+            {"message": "Experience berhasil ditambahkan.", "pk": str(experience.id)}, 
+            status=201
+        )
+    
+    return JsonResponse({"errors": form.errors.get_json_data()}, status=400)
 
 def login_user(request):
     form = AuthenticationForm(request, data=request.POST or None)

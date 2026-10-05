@@ -1,6 +1,10 @@
-from django.forms import ModelForm, TextInput, Textarea, URLInput, Select, DateInput
+from django.forms import ModelForm, TextInput, Textarea, URLInput, Select, DateInput, ValidationError
 
 from main.models import Project, Experience
+
+from django import forms
+
+from django.utils.html import strip_tags
 
 class ProjectForm(ModelForm):
     class Meta:
@@ -83,3 +87,13 @@ class ExperienceForm(ModelForm):
             "ended_at": DateInput(attrs={"type": "date"}), # Ini bikin muncul kalender
             "category": Select(), 
         }
+
+    # Membersihkan tag HTML dari title
+    def clean_title(self):
+        title = self.cleaned_data.get('title')
+        return strip_tags(title)
+
+    # Membersihkan tag HTML dari description
+    def clean_description(self):
+        description = self.cleaned_data.get('description')
+        return strip_tags(description)
