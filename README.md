@@ -66,6 +66,20 @@ Berikut log percakapan saya dengan Gemini: https://share.gemini.google/T3anMCVjM
 3. XSS adalah serangan yang menyisipkan script berbahaya ke halaman web agar dijalankan di browser korban. Data AJAX lebih rentan karena sering dirender lewat innerHTML tanpa dicek dlu.
 
 Dokumentasi:
-Saya menggunakan AI Gemini 3.1 Pro untuk membantu saya mengerjakan Tugas 5 ini. Jika ada kendala dalam mengerjakan Tugas 4 ini, saya juga meminta AI untuk menemukan letak masalahnya.
+Saya menggunakan AI Gemini 3.1 Pro untuk membantu saya mengerjakan Tugas 5 ini. Jika ada kendala dalam mengerjakan Tugas 5 ini, saya juga meminta AI untuk menemukan letak masalahnya.
 
 Berikut log percakapan saya dengan Gemini: https://share.gemini.google/I2X1xuDEwtMg
+
+### Tugas 6
+
+1. REST itu gaya arsitektur API di mana resource punya URL sendiri (misal /books/1), operasinya pakai method HTTP yang sesuai, server-nya stateless, dan status code-nya bener. Jadi balikin JSON doang belum cukup, karena kalau semuanya lewat satu endpoint dan selalu return 200, itu belum RESTful. PUT dipakai buat mengganti seluruh data resource (misal edit form buku yang semua field-nya dikirim ulang), sedangkan PATCH buat ubah sebagian field aja (misal update status pesanan jadi “dikirim”).
+2. Serializer itu penerjemah antara objek model Django dan JSON (dan sebaliknya). Dibanding dictionary manual + JsonResponse, serializer lebih ringkas, punya validasi input bawaan, dan format outputnya diatur di satu tempat sehingga gampang dirawat.
+
+3. Autentikasi itu soal “kamu siapa?”, sedangkan otorisasi soal “kamu boleh ngapain?”. Hak akses harus dicek pakai permission class di server karena menyembunyikan tombol di template cuma mengubah tampilan. Orang tetap bisa nembak endpoint langsung lewat Postman atau curl.
+
+4. SessionAuthentication pakai cookie sesi yang otomatis dikirim browser, termasuk dari situs jahat, makanya request yang mengubah data tetap butuh token CSRF. Test dengan force_authenticate nggak cukup karena langsung melewati proses autentikasi, jadi pengecekan CSRF nggak pernah jalan. Buat membuktikannya, test harus pakai login sesi sungguhan dengan enforce_csrf_checks=True, lalu pastikan request tanpa token ditolak (403).
+
+Dokumentasi:
+Saya menggunakan AI Gemini 3.1 Pro untuk membantu saya mengerjakan Tugas 6 ini. Jika ada kendala dalam mengerjakan Tugas 6 ini, saya juga meminta AI untuk menemukan letak masalahnya.
+
+Berikut log percakapan saya dengan Gemini: https://share.gemini.google/AckT10q9esyi

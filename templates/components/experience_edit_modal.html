@@ -1,0 +1,55 @@
+<div id="edit-experience-modal" class="project-form-modal" popover="auto">
+  <button
+    type="button"
+    class="project-form-modal__backdrop"
+    popovertarget="edit-experience-modal"
+    popovertargetaction="hide"
+  ></button>
+  <div class="project-form-modal__content">
+    <button
+      type="button"
+      class="project-form-modal__close"
+      popovertarget="edit-experience-modal"
+      popovertargetaction="hide"
+    >
+      &times;
+    </button>
+
+    <h2>Edit Experience</h2>
+    <form id="edit-experience-form" class="project-form">
+      {% csrf_token %}
+      <input type="hidden" id="edit-id" name="id" />
+
+      <!-- Kita buat input manual agar mudah diisi oleh JavaScript -->
+      <div class="form-group">
+        <label for="edit-title">Title</label>
+        <input type="text" id="edit-title" name="title" required />
+      </div>
+      <div class="form-group">
+        <label for="edit-description">Description</label>
+        <textarea id="edit-description" name="description" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="edit-category">Category</label>
+        <select id="edit-category" name="category">
+          <option value="full-time">Full-Time</option>
+          <option value="part-time">Part-Time</option>
+          <option value="volunteer">Volunteer</option>
+          <option value="internship">Internship</option>
+        </select>
+      </div>
+
+      <div class="project-form-modal__actions">
+        <button
+          type="button"
+          class="button button-secondary"
+          popovertarget="edit-experience-modal"
+          popovertargetaction="hide"
+        >
+          Batal
+        </button>
+        <button type="submit" class="button">Simpan Perubahan</button>
+      </div>
+    </form>
+  </div>
+</div>
